@@ -17,6 +17,7 @@ import (
 	"github.com/infrahq/infra/internal/logging"
 	"github.com/infrahq/infra/internal/server/authn"
 	"github.com/infrahq/infra/internal/server/models"
+	"github.com/infrahq/infra/uid"
 )
 
 type API struct {
@@ -125,20 +126,6 @@ func (a *API) DeleteIdentity(c *gin.Context, r *api.Resource) error {
 	return access.DeleteIdentity(c, r.ID)
 }
 
-func (a *API) ListIdentityGrants(c *gin.Context, r *api.Resource) ([]api.Grant, error) {
-	grants, err := access.ListIdentityGrants(c, r.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	results := make([]api.Grant, len(grants))
-	for i, g := range grants {
-		results[i] = *g.ToAPI()
-	}
-
-	return results, nil
-}
-
 func (a *API) ListIdentityGroups(c *gin.Context, r *api.Resource) ([]api.Group, error) {
 	groups, err := access.ListIdentityGroups(c, r.ID)
 	if err != nil {
@@ -187,20 +174,6 @@ func (a *API) CreateGroup(c *gin.Context, r *api.CreateGroupRequest) (*api.Group
 	}
 
 	return group.ToAPI(), nil
-}
-
-func (a *API) ListGroupGrants(c *gin.Context, r *api.Resource) ([]api.Grant, error) {
-	grants, err := access.ListGroupGrants(c, r.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	results := make([]api.Grant, len(grants))
-	for i, d := range grants {
-		results[i] = *d.ToAPI()
-	}
-
-	return results, nil
 }
 
 // caution: this endpoint is unauthenticated, do not return sensitive info
@@ -432,6 +405,18 @@ func (a *API) ListGrants(c *gin.Context, r *api.ListGrantsRequest) ([]api.Grant,
 	}
 
 	return results, nil
+}
+
+// TODO: remove after deprecation period
+func (a *API) ListIdentityGrants(c *gin.Context, r *api.Resource) ([]api.Grant, error) {
+	id := uid.NewIdentityPolymorphicID(r.ID)
+	return a.ListGrants(c, &api.ListGrantsRequest{Subject: id})
+}
+
+// TODO: remove after deprecation period
+func (a *API) ListGroupGrants(c *gin.Context, r *api.Resource) ([]api.Grant, error) {
+	id := uid.NewGroupPolymorphicID(r.ID)
+	return a.ListGrants(c, &api.ListGrantsRequest{Subject: id})
 }
 
 func (a *API) GetGrant(c *gin.Context, r *api.Resource) (*api.Grant, error) {
