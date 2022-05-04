@@ -113,6 +113,18 @@
           "name": {
             "type": "string"
           },
+          "resources": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
           "uniqueID": {
             "example": "94c2c570a20311180ec325fd56",
             "type": "string"
@@ -354,6 +366,18 @@
                 },
                 "name": {
                   "type": "string"
+                },
+                "resources": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "roles": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
                 },
                 "uniqueID": {
                   "example": "94c2c570a20311180ec325fd56",
@@ -1049,6 +1073,18 @@
                   "name": {
                     "type": "string"
                   },
+                  "resources": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "roles": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "uniqueID": {
                     "type": "string"
                   }
@@ -1338,6 +1374,18 @@
                   },
                   "name": {
                     "type": "string"
+                  },
+                  "resources": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "roles": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
                   },
                   "uniqueID": {
                     "type": "string"
