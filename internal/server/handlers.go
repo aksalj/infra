@@ -127,21 +127,11 @@ func (a *API) DeleteIdentity(c *gin.Context, r *api.Resource) error {
 }
 
 func (a *API) ListIdentityGroups(c *gin.Context, r *api.Resource) ([]api.Group, error) {
-	groups, err := access.ListIdentityGroups(c, r.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	results := make([]api.Group, len(groups))
-	for i, g := range groups {
-		results[i] = *g.ToAPI()
-	}
-
-	return results, nil
+	return a.ListGroups(c, &api.ListGroupsRequest{UserID: r.ID})
 }
 
 func (a *API) ListGroups(c *gin.Context, r *api.ListGroupsRequest) ([]api.Group, error) {
-	groups, err := access.ListGroups(c, r.Name)
+	groups, err := access.ListGroups(c, r.Name, r.UserID)
 	if err != nil {
 		return nil, err
 	}

@@ -229,6 +229,7 @@ func (c Client) ListIdentityGrants(id uid.ID) ([]Grant, error) {
 	return list[Grant](c, fmt.Sprintf("/v1/identities/%s/grants", id), nil)
 }
 
+// Deprecated: use ListGroups
 func (c Client) ListIdentityGroups(id uid.ID) ([]Group, error) {
 	return list[Group](c, fmt.Sprintf("/v1/identities/%s/groups", id), nil)
 }

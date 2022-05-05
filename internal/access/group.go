@@ -1,8 +1,11 @@
 package access
 
 import (
+	"errors"
+
 	"github.com/gin-gonic/gin"
 
+	"github.com/infrahq/infra/internal"
 	"github.com/infrahq/infra/internal/server/data"
 	"github.com/infrahq/infra/internal/server/models"
 	"github.com/infrahq/infra/uid"
@@ -30,13 +33,21 @@ func isUserInGroup(c *gin.Context, requestedResourceID uid.ID) (bool, error) {
 	return false, nil
 }
 
-func ListGroups(c *gin.Context, name string) ([]models.Group, error) {
+func ListGroups(c *gin.Context, name string, userID uid.ID) ([]models.Group, error) {
 	db, err := RequireInfraRole(c, models.InfraAdminRole, models.InfraViewRole, models.InfraConnectorRole)
-	if err != nil {
-		return nil, err
+	if err == nil {
+		return data.ListGroups(db, data.ByOptionalName(name), data.ByOptionalIdentityID(userID))
 	}
 
-	return data.ListGroups(db, data.ByOptionalName(name))
+	if errors.Is(err, internal.ErrForbidden) {
+		db, err := hasAuthorization(c, userID, isIdentitySelf)
+		if err != nil {
+			return nil, err
+		}
+		return data.ListGroups(db, data.ByOptionalName(name), data.ByIdentityID(userID))
+	}
+
+	return nil, err
 }
 
 func CreateGroup(c *gin.Context, group *models.Group) error {
@@ -55,13 +66,4 @@ func GetGroup(c *gin.Context, id uid.ID) (*models.Group, error) {
 	}
 
 	return data.GetGroup(db, data.ByID(id))
-}
-
-func ListIdentityGroups(c *gin.Context, userID uid.ID) ([]models.Group, error) {
-	db, err := hasAuthorization(c, userID, isIdentitySelf, models.InfraAdminRole, models.InfraViewRole)
-	if err != nil {
-		return nil, err
-	}
-
-	return data.ListIdentityGroups(db, userID)
 }

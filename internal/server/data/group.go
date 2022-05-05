@@ -27,12 +27,20 @@ func ListGroups(db *gorm.DB, selectors ...SelectorFunc) ([]models.Group, error) 
 	return list[models.Group](db, selectors...)
 }
 
-func ListIdentityGroups(db *gorm.DB, identityID uid.ID) (result []models.Group, err error) {
-	if err := db.Model(&models.Identity{Model: models.Model{ID: identityID}}).Association("Groups").Find(&result); err != nil {
-		return nil, err
+func ByOptionalIdentityID(id uid.ID) SelectorFunc {
+	return func(db *gorm.DB) *gorm.DB {
+		if id == 0 {
+			return db
+		}
+		return db.Joins("Identities")
 	}
+}
 
-	return result, nil
+// TODO: align this with ListGroups
+func ListIdentityGroups(db *gorm.DB, identityID uid.ID) ([]models.Group, error) {
+	var result []models.Group
+	err := db.Model(&models.Identity{Model: models.Model{ID: identityID}}).Association("Groups").Find(&result)
+	return result, err
 }
 
 func DeleteGroups(db *gorm.DB, selectors ...SelectorFunc) error {
