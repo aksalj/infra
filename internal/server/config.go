@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infrahq/secrets"
+	"github.com/mitchellh/mapstructure"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
@@ -42,11 +43,19 @@ type User struct {
 	Email string `mapstructure:"email"`
 }
 
+type BaseConfig struct {
+	Version string `mapstructure:"v"`
+}
+
+type ConfigStruct struct {
+	Providers []Provider
+}
+
 type Config struct {
-	Providers  []Provider `mapstructure:"providers" validate:"dive"`
-	Grants     []Grant    `mapstructure:"grants" validate:"dive"`
-	Identities []User     `mapstructure:"identities" validate:"dive"` // #1829: remove, migrate identities to users
-	Users      []User     `mapstructure:"users" validate:"dive"`
+	Version   string     `mapstructure:"version"`
+	Providers []Provider `mapstructure:"providers" validate:"dive"`
+	Grants    []Grant    `mapstructure:"grants" validate:"dive"`
+	Users     []User     `mapstructure:"users" validate:"dive"`
 }
 
 type KeyProvider struct {
@@ -524,6 +533,35 @@ func getKindFromUnstructured(data interface{}) string {
 	return ""
 }
 
+func decodeServerConfig[T any](config interface{}, into *T) error {
+	msd, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+		DecodeHook: mapstructure.TextUnmarshallerHookFunc(),
+		Result:     &into,
+	})
+	if err != nil {
+		return err
+	}
+
+	return msd.Decode(config)
+}
+
+func ParseConfig(serverConfig interface{}) (Config, error) {
+	var configBase ConfigBase
+	decodeServerConfig(serverConfig, &configBase)
+
+	if configBase.Version == "" {
+		// this is before versioning so it is 0.1
+		var configv0dot1 ConfigV0dot1
+		decodeServerConfig(serverConfig, &configv0dot1)
+		return *configv0dot1.ToV0dot2(), nil
+	}
+
+	var configv0dot2 Config
+	decodeServerConfig(serverConfig, &configv0dot2)
+
+	return configv0dot2, nil
+}
+
 func (s Server) loadConfig(config Config) error {
 	if err := validator.New().Struct(config); err != nil {
 		return err
@@ -561,10 +599,10 @@ func (s Server) loadConfig(config Config) error {
 		}
 
 		// #1829: remove, migrate identities to users
-		if len(config.Identities) > 0 {
-			logging.S.Warn("please update 'identities' in config to 'users', 'identities' will be deprecated in a future release")
-			config.Users = append(config.Users, config.Identities...)
-		}
+		// if len(config.Identities) > 0 {
+		// 	logging.S.Warn("please update 'identities' in config to 'users', 'identities' will be deprecated in a future release")
+		// 	config.Users = append(config.Users, config.Identities...)
+		// }
 
 		if err := s.loadUsers(tx, config.Users); err != nil {
 			return fmt.Errorf("load users: %w", err)

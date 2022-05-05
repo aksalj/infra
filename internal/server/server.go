@@ -58,7 +58,7 @@ type Options struct {
 	Keys    []KeyProvider    `mapstructure:"keys"`
 	Secrets []SecretProvider `mapstructure:"secrets"`
 
-	Config `mapstructure:",squash"`
+	Config map[string]interface{} `mapstructure:"config"`
 
 	NetworkEncryption           string `mapstructure:"networkEncryption"` // mtls (default), e2ee, none.
 	TrustInitialClientPublicKey string `mapstructure:"trustInitialClientPublicKey"`
@@ -160,7 +160,12 @@ func New(options Options) (*Server, error) {
 		}
 	}
 
-	if err := server.loadConfig(server.options.Config); err != nil {
+	config, err := ParseConfig(server.options.Config)
+	if err != nil {
+		return nil, fmt.Errorf("parse config: %w", err)
+	}
+
+	if err := server.loadConfig(config); err != nil {
 		return nil, fmt.Errorf("configs: %w", err)
 	}
 

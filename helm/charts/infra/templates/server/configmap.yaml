@@ -33,17 +33,18 @@ data:
     dbEncryptionKey: /var/lib/infrahq/server/sqlite3.db.key
 {{- end }}
 {{- end }}
+    
+    config:
+      providers:
+{{- .Values.server.config.providers | default list | concat .Values.server.additionalProviders | uniq | toYaml | nindent 8 }}
 
-    providers:
-{{- .Values.server.config.providers | default list | concat .Values.server.additionalProviders | uniq | toYaml | nindent 6 }}
+      grants:
+{{- .Values.server.config.grants | default list | concat .Values.server.additionalGrants | uniq | toYaml | nindent 8 }}
 
-    grants:
-{{- .Values.server.config.grants | default list | concat .Values.server.additionalGrants | uniq | toYaml | nindent 6 }}
+      identities:
+{{- .Values.server.config.identities | default list | concat .Values.server.additionalIdentities | uniq | toYaml | nindent 8 }}
 
-    identities:
-{{- .Values.server.config.identities | default list | concat .Values.server.additionalIdentities | uniq | toYaml | nindent 6 }}
-
-    users:
+      users:
 {{- $users := .Values.server.config.users | default list | concat .Values.server.additionalUsers }}
 
 {{- if .Values.server.config.adminAccessKey }}
@@ -62,7 +63,7 @@ data:
 {{- $users = append $users (dict "name" "connector" "accessKey" $accessKey) }}
 {{- end }}
 
-{{- $users | uniq | toYaml | nindent 6 }}
+{{- $users | uniq | toYaml | nindent 8 }}
 
     secrets:
 {{- .Values.server.config.secrets | default list | concat .Values.server.additionalSecrets | uniq | toYaml | nindent 6 }}
