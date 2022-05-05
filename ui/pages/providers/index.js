@@ -111,7 +111,7 @@ export default function Providers () {
               )}
               {error?.status
                 ? <div className='my-20 text-center font-light text-gray-300 text-sm'>{error?.info?.message}</div>
-                : data.length === 0
+                : data?.length === 0
                   ? (
                     <EmptyTable
                       title='There are no identity providers'
