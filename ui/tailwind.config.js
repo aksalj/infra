@@ -22,7 +22,16 @@ module.exports = {
         },
         gray: {
           300: '#B2B2B2'
+        },
+        purple: {
+          50: '#F4E2FF'
         }
+      },
+      fontSize: {
+        note: ['10px', '12px'],
+        name: ['12px', '15px'],
+        icon: ['12px', '0px'],
+        nav: ['13px', '16px']
       },
       transitionProperty: {
         size: 'height, padding, background'
