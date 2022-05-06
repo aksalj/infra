@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.13.0](https://github.com/infrahq/infra/compare/v0.12.2...v0.13.0) (2022-05-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove `kubernetes.` prefix from destinations (#1849)
+
+### Features
+
+* dereference polymorhpic IDs in grant responses ([2b82143](https://github.com/infrahq/infra/commit/2b82143f0ce712f4f308f6e39723ea59b46687ef))
+* introduce cli errors ([#1786](https://github.com/infrahq/infra/issues/1786)) ([d7dab70](https://github.com/infrahq/infra/commit/d7dab707cfaec8e547e5a8249869bc68aee1e491))
+* list responses as objects ([406915f](https://github.com/infrahq/infra/commit/406915fb1e8e45e4b354f589d21aae2e84cd31f6))
+* move info and version from flags to other commands ([#1864](https://github.com/infrahq/infra/issues/1864)) ([cf9e073](https://github.com/infrahq/infra/commit/cf9e073ee99fbabdf05a263576729f09684f1ae4))
+* remove polymorphic id from login response ([3aa34e5](https://github.com/infrahq/infra/commit/3aa34e5fdf2a30cbe697315366a7fa5c2a0dabd5))
+* update clients to use list responses ([b679426](https://github.com/infrahq/infra/commit/b6794260e8f270b322378f48acef43b59f99537f))
+* use email name for authinfo inside of kube ([#1852](https://github.com/infrahq/infra/issues/1852)) ([e93cd84](https://github.com/infrahq/infra/commit/e93cd84c06499780b77cade085f8fa3b5dffa4b5))
+
+
+### Bug Fixes
+
+* add additional signup check ([703966e](https://github.com/infrahq/infra/commit/703966eca8be62874a77b3e69f373dc5539ef29d))
+* add button to add users ([#1826](https://github.com/infrahq/infra/issues/1826)) ([681d79c](https://github.com/infrahq/infra/commit/681d79c7c3f7680874a8d0dbf8879db8d13cd439))
+* cleanup telemetry ([#1874](https://github.com/infrahq/infra/issues/1874)) ([69c61ad](https://github.com/infrahq/infra/commit/69c61ada4e9622b68b334c306d38c43fd669fe58))
+* disable sign-up before username and pass set ([#1870](https://github.com/infrahq/infra/issues/1870)) ([19d04cc](https://github.com/infrahq/infra/commit/19d04ccc555abd1bf5904bb70e425a77948fdb6c))
+* general ui bugs ([#1785](https://github.com/infrahq/infra/issues/1785)) ([5638a0e](https://github.com/infrahq/infra/commit/5638a0ed05aededf84c7ae404f0c4814dceabf99))
+* load identities using name or email ([d72128f](https://github.com/infrahq/infra/commit/d72128f649bffcdd1716ee7156bd335ffacdd303))
+* logout failure and error on safari ([#1799](https://github.com/infrahq/infra/issues/1799)) ([2a711dc](https://github.com/infrahq/infra/commit/2a711dc710fba8341df9238b09314031c154ffac))
+* minor presentational ui bugs ([#1876](https://github.com/infrahq/infra/issues/1876)) ([8d9a4ed](https://github.com/infrahq/infra/commit/8d9a4ed3d01e39b4c0a1409172ccc6172446faf6))
+* multi providers ui bug ([#1827](https://github.com/infrahq/infra/issues/1827)) ([c6d9932](https://github.com/infrahq/infra/commit/c6d9932682d3183edb2f2cb34d500ccaf47bed09))
+* remove `kubernetes.` prefix from destinations ([#1849](https://github.com/infrahq/infra/issues/1849)) ([bbecdf1](https://github.com/infrahq/infra/commit/bbecdf17ea76af59b0385c6bfb41b814179af1df))
+* remove and update helm links ([#1866](https://github.com/infrahq/infra/issues/1866)) ([b8bc11f](https://github.com/infrahq/infra/commit/b8bc11f6d4c33c451a286653f5ecdcdb911e1e39))
+* serialize empty ID to 0 ([4c00719](https://github.com/infrahq/infra/commit/4c00719ec59749718def4cf501b405c0d74d8cd4))
+* share modal input bugs ([#1842](https://github.com/infrahq/infra/issues/1842)) ([25501d8](https://github.com/infrahq/infra/commit/25501d8ac29279e125e902f74a0e4943702a5d2b))
+
 ### [0.12.2](https://github.com/infrahq/infra/compare/v0.12.1...v0.12.2) (2022-04-29)
 
 
